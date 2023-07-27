@@ -21,6 +21,7 @@ import ru.practicum.main_service.event.model.Event;
 import ru.practicum.main_service.event.model.Location;
 import ru.practicum.main_service.event.repository.EventRepository;
 import ru.practicum.main_service.event.repository.LocationRepository;
+import ru.practicum.main_service.exception.BadRequestException;
 import ru.practicum.main_service.exception.ForbiddenException;
 import ru.practicum.main_service.exception.NotFoundException;
 import ru.practicum.main_service.user.model.User;
@@ -356,21 +357,21 @@ public class EventServiceImpl implements EventService {
 
     private void checkStartIsBeforeEnd(LocalDateTime rangeStart, LocalDateTime rangeEnd) {
         if (rangeStart != null && rangeEnd != null && rangeStart.isAfter(rangeEnd)) {
-            throw new ForbiddenException(String.format("Field: eventDate. Error: некорректные параметры временного " +
+            throw new BadRequestException(String.format("Field: eventDate. Error: некорректные параметры временного " +
                     "интервала. Value: rangeStart = %s, rangeEnd = %s", rangeStart, rangeEnd));
         }
     }
 
     private void checkNewEventDate(LocalDateTime newEventDate, LocalDateTime minTimeBeforeEventStart) {
         if (newEventDate != null && newEventDate.isBefore(minTimeBeforeEventStart)) {
-            throw new ForbiddenException(String.format("Field: eventDate. Error: остается слишком мало времени для " +
+            throw new BadRequestException(String.format("Field: eventDate. Error: остается слишком мало времени для " +
                             "подготовки. Value: %s", newEventDate));
         }
     }
 
     private void checkIsNewLimitNotLessOld(Integer newLimit, Long eventParticipantLimit) {
         if (newLimit != 0 && eventParticipantLimit != 0 && (newLimit < eventParticipantLimit)) {
-            throw new ForbiddenException(String.format("Field: stateAction. Error: Новый лимит участников должен " +
+            throw new BadRequestException(String.format("Field: stateAction. Error: Новый лимит участников должен " +
                     "быть не меньше количества уже одобренных заявок: %s", eventParticipantLimit));
         }
     }

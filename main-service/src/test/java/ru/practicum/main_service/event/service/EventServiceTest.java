@@ -31,6 +31,7 @@ import ru.practicum.main_service.event.model.Event;
 import ru.practicum.main_service.event.model.Location;
 import ru.practicum.main_service.event.repository.EventRepository;
 import ru.practicum.main_service.event.repository.LocationRepository;
+import ru.practicum.main_service.exception.BadRequestException;
 import ru.practicum.main_service.exception.ForbiddenException;
 import ru.practicum.main_service.exception.NotFoundException;
 import ru.practicum.main_service.user.dto.UserShortDto;
@@ -234,7 +235,7 @@ public class EventServiceTest {
 
         @Test
         public void shouldThrowExceptionIfBadTimeRange() {
-            ForbiddenException exception = assertThrows(ForbiddenException.class,
+            BadRequestException exception = assertThrows(BadRequestException.class,
                     () -> eventService.getEventsByAdmin(List.of(event1.getInitiator().getId()),
                             List.of(event1.getState()), List.of(event1.getCategory().getId()), event1.getCreatedOn(),
                             event1.getCreatedOn().minusMinutes(5), 0, 10));
@@ -391,7 +392,7 @@ public class EventServiceTest {
         public void shouldThrowExceptionIfNewEventDateNotValid() {
             updateEventAdminRequest.setEventDate(LocalDateTime.now());
 
-            ForbiddenException exception = assertThrows(ForbiddenException.class,
+            BadRequestException exception = assertThrows(BadRequestException.class,
                     () -> eventService.patchEventByAdmin(event1.getId(), updateEventAdminRequest));
             assertEquals(String.format("Field: eventDate. Error: остается слишком мало времени для " +
                     "подготовки. Value: %s", updateEventAdminRequest.getEventDate()), exception.getMessage());
@@ -424,7 +425,7 @@ public class EventServiceTest {
             when(locationRepository.save(any())).thenReturn(updatedLocation);
             when(statsService.getConfirmedRequests(any())).thenReturn(confirmedRequests);
 
-            ForbiddenException exception = assertThrows(ForbiddenException.class,
+            BadRequestException exception = assertThrows(BadRequestException.class,
                     () -> eventService.patchEventByAdmin(event1.getId(), updateEventAdminRequest));
             assertEquals(String.format("Field: stateAction. Error: Новый лимит участников должен " +
                     "быть не меньше количества уже одобренных заявок: %s", confirmedRequests.get(event1.getId())),
@@ -539,7 +540,7 @@ public class EventServiceTest {
         public void shouldThrowExceptionIfEventDateNotValid() {
             newEventDto.setEventDate(LocalDateTime.now());
 
-            ForbiddenException exception = assertThrows(ForbiddenException.class,
+            BadRequestException exception = assertThrows(BadRequestException.class,
                     () -> eventService.createEventByPrivate(event1.getInitiator().getId(), newEventDto));
             assertEquals(String.format("Field: eventDate. Error: остается слишком мало времени для " +
                     "подготовки. Value: %s", newEventDto.getEventDate()), exception.getMessage());
@@ -700,7 +701,7 @@ public class EventServiceTest {
         public void shouldThrowExceptionIfNewEventDateNotValid() {
             updateEventUserRequest.setEventDate(LocalDateTime.now());
 
-            ForbiddenException exception = assertThrows(ForbiddenException.class,
+            BadRequestException exception = assertThrows(BadRequestException.class,
                     () -> eventService.patchEventByPrivate(event1.getInitiator().getId(), event1.getId(),
                             updateEventUserRequest));
             assertEquals(String.format("Field: eventDate. Error: остается слишком мало времени для " +
@@ -768,7 +769,7 @@ public class EventServiceTest {
 
         @Test
         public void shouldThrowExceptionIfBadTimeRange() {
-            ForbiddenException exception = assertThrows(ForbiddenException.class,
+            BadRequestException exception = assertThrows(BadRequestException.class,
                     () -> eventService.getEventsByPublic("some text", List.of(event1.getCategory().getId()),
                             false, event1.getCreatedOn(), event1.getCreatedOn().minusMinutes(5), true,
                             EventSort.EVENT_DATE, 0, 10, new MockHttpServletRequest()));
