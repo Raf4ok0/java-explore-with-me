@@ -3,6 +3,7 @@ package ru.practicum.stats_common.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
@@ -12,6 +13,7 @@ import java.util.Objects;
 @Setter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class EndpointHit {
     @NotBlank
     private String app;

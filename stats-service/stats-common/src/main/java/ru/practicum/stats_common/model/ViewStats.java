@@ -3,14 +3,16 @@ package ru.practicum.stats_common.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Objects;
 
 @Getter
 @Setter
-@Builder
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ViewStats {
     private String app;
     private String uri;
